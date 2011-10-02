@@ -1,0 +1,31 @@
+interface
+
+void init_effects();
+
+enum enum_soundeffects
+{
+	SE_bug,
+	SE_explosion,
+	SE_hit,
+	SE_infotron,
+	SE_pcb,
+	SE_push,
+	SE_victory,
+	SE_last
+};
+
+implementation
+
+uses configuration,audio;
+
+void init_effects()
+{
+	load_effects(datadir+"/sounds/bug.ogg");
+	load_effects(datadir+"/sounds/explosion.ogg");
+	load_effects(datadir+"/sounds/hit.ogg");
+	load_effects(datadir+"/sounds/infotron.ogg");
+	load_effects(datadir+"/sounds/pcb.ogg");
+	load_effects(datadir+"/sounds/push.ogg");
+	load_effects(datadir+"/sounds/victory.ogg");
+}
+

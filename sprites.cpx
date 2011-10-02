@@ -1,0 +1,43 @@
+interface
+
+void init_sprites();
+int gettex(int i, int j);
+
+implementation
+
+uses includes,configuration,readpng;
+
+vector<vector<GLuint> > tiles;
+
+enum enum_tilesets {
+	TT_tiles,
+	TT_murphfaces,
+	TT_murphwalk,
+	TT_tronroll,
+	TT_zonkroll,
+	TT_knikcut,
+	TT_knikturn,
+	TT_explode,
+	TT_explodeinfo,
+	TT_elektron,
+	TT_vanishdisk,
+	TT_vanishinfo,
+	TT_vanishpcb,
+	TT_console,
+	TT_bug,
+	TT_last};
+
+int gettex(int i, int j)
+{
+	if (i>=tiles.size()) return 0;
+	if (j>=tiles[i].size()) return 0;
+	return tiles[i][j];
+}
+
+#define _DEF_LOADIMG(a) loadImageSet((datadir+"/graphics/"#a".png").c_str(),tiles[TT_##a],0);
+
+void init_sprites()
+{
+	tiles.resize(TT_last);
+	_DEF_LOADIMG(tiles);
+}

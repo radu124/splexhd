@@ -7,3 +7,7 @@ util/pnggraphics/tiles
 util/exportgraphics/*.bmp
 *.vcxproj*
 util/pnggraphics/*.png
+*.d
+cpxprep
+game
+splexhd

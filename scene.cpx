@@ -1,0 +1,11 @@
+interface
+
+uses includes;
+
+void scenehandleevent(SDL_Event &event);
+
+implementation
+
+void scenehandleevent(SDL_Event &event)
+{
+}
