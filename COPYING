@@ -1,0 +1,28 @@
+All game source is distributed under GPL license
+
+The following game elements are not covered by this license:
+ * Graphics
+ * Music
+ * Levels
+
+Legal status of the original game:
+
+Sources (http://elmerproductions.com/sp/history.html) indicate that the authors and copyright holders of the game
+agreed to allow the game to be publicly distributed free of charge.
+
+Until the legal status is clarified, data files from the original game will not be included.
+Optionally, the installer will give the option of downloading these files from a third party.
+
+
+GRAPHICS:
+Graphics were hand drawn based on original graphics from the supaplex game.
+This can probably be qualified as "derivative work" or entirely new work.
+The author grants a licence to use or distribute together with this game or inside any derivative work licensed under GPL.
+
+MUSIC:
+The original music will not be distributed here until the legal status is clarified. Furthermore, the original
+music uses the MIDI format, which will not be suported by the engine.
+Third party original work under proper license will be included.
+
+LEVELS:
+Original levels will not be distributed here until the legal status is clarified.
