@@ -1,0 +1,9 @@
+util/pnggraphics/alpha
+util/pnggraphics/sets
+util/pnggraphics/tiles
+*.o
+*.exe
+*.exe.so
+util/exportgraphics/*.bmp
+*.vcxproj*
+util/pnggraphics/*.png
