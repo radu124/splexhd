@@ -4,7 +4,8 @@ The following game elements are not covered by this license:
  * Graphics
  * Music
  * Levels
-
+ * Utilities
+ 
 Legal status of the original game:
 
 Sources (http://elmerproductions.com/sp/history.html) indicate that the authors and copyright holders of the game
@@ -26,3 +27,7 @@ Third party original work under proper license will be included.
 
 LEVELS:
 Original levels will not be distributed here until the legal status is clarified.
+
+UTILITIES:
+Some programs are not part of the distribution, but they are useful tools for facilitating development
+These are found in the util/ directory and may have specific copyright
