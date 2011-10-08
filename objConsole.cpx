@@ -1,0 +1,14 @@
+interface
+
+void doobj_console(int loc);
+void display_console(int loc);
+
+implementation
+
+void doobj_console(int loc)
+{
+};
+
+void display_console(int loc)
+{
+};

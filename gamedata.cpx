@@ -1,0 +1,144 @@
+interface
+
+/**
+ * Tile type flags, defined as enum for simplicity
+ */
+enum TTFLAGS { 
+	// TB = tile base - this is the same id the tile has in the level file
+	TB_ZONK        =    0x01,
+	TB_PCB         =    0x02,
+	TB_MURPHY      =    0x03,
+	TB_INFOTRON    =    0x04,
+	TB_CONCRETE    =    0x06,
+	TB_ORANGE      =    0x08,
+	TB_KNIK        =    0x11,
+	TB_YELLOW      =    0x12,
+	TB_CONSOLE     =    0x13,
+	TB_ELECTRON    =    0x18,
+
+	// TX = extended IDs we assign here to tiles that move
+	TX_EXPLOSION   =    0x30,
+	TX_KNIK        =    0x80,
+	TX_ELECTRON    =    0x90,
+	TX_ORANGE      =    0xa0,
+	TX_YELLOW      =    0xb0,
+	TX_ZONK        =    0xc0,
+	TX_INFOTRON    =    0xd0,
+	TX_LEAVING     =    0xf0,
+	// TF = tile flags, put tiles in categories to facilitate decisions
+	// TD = flag combinations, to avoid checking for flags with plain &
+	TF_BUG         =  0x0100, 
+	TF_IC          =  0x0200, 
+	TF_SOLID       =  0x0400, 
+	TF_PORT        =  0x0800, 
+	TF_SPECIAL     =  0x1000, 
+	TD_PORTSPECIAL =  0x1800,
+	TF_ENEMY       =  0x2000,
+	TF_FALLING     =  0x4000,
+	TF_ORANGE      =  0x8000,
+	TD_OFALLING    =  0xc000
+	};
+
+/**
+ * one map tile
+ * typ - indicates the tile type
+ * counter - indicates the progress of the current tile animation
+ * xplode - indicates the time until an explosion will take place in that tile
+ */
+struct ttile
+{
+	int typ;     // aka extd
+	int counter; // aka basic, cdown
+	int xplode;
+	void set(int vtyp=0, int vcounter=0, int vexplode=0);
+};
+
+/**
+ * large table containing the entire map data and current status
+ * initialized by loadLevel(), never deallocated, only increased in size
+ *    to accommodate larger levels
+ */
+ttile *ldt=NULL;
+int ldt_allocd=0; /// amount of memory allocated for ldt
+
+/**
+ * memory for gameplay demo
+ * a length of 0 indicates no demo available
+ */
+struct tdemo
+{
+	int length;
+	int pos;
+	int move;
+	int mcnt;
+	int frame;
+	uint8_t dat[16384];
+	void init();
+} demo;
+
+enum enum_gamemode{
+	GAMEMODE_NORMAL,
+	GAMEMODE_LOOKAROUND,
+	GAMEMODE_MENU
+	};
+
+/**
+ * just to group together the variables
+ * comprising the game state
+ */
+struct tgamestate
+{
+	int mcoord;
+	int mode; //=0;
+	int lost; //=0;
+	int gravity;  //=0;
+	int infotronsneeded;  //=0;
+	int murphlastlr;      //=0;
+	int endgamecountdown; //=0;
+	int freezezonks;
+	int freezeenemies;
+	int reddisklocation;
+	int reddiskcount;
+	int murphdead;        //=0;
+	uint32_t reddisktimeout;
+	int timestarted;
+	int timepaused;
+	void init();
+} game;
+
+/**
+ * displacements used to access the tiles around a given tile
+ */
+int delta[8]={-60,1,60,-1,-60,1,60,-1};
+
+string levelname;
+
+int lvlwidth=60;  /// width of a level
+int lvlheight=24; /// height of a level
+
+implementation
+
+void ttile::set(int vtyp, int vcounter, int vexplode)
+{
+	typ=vtyp;
+	counter=vcounter;
+	xplode=vexplode;
+}
+
+void tdemo::init()
+{
+}
+
+void tgamestate::init()
+{
+	mode=GAMEMODE_NORMAL;
+	mcoord=0;
+	lost=0;
+	endgamecountdown=0;
+	murphdead=0;
+	reddiskcount=0;
+	reddisktimeout=0;
+	reddisklocation=0;
+	timestarted=SDL_GetTicks();
+	freezeenemies=0;
+}

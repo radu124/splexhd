@@ -1,0 +1,16 @@
+interface
+
+void doobj_bug(int loc);
+void display_bug(int loc);
+
+implementation
+
+uses gamedata;
+
+void doobj_bug(int loc)
+{
+}
+
+void display_bug(int loc)
+{
+}

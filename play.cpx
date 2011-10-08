@@ -1,0 +1,147 @@
+interface
+
+uses includes;
+
+int lvlshowdispi=0;
+int lvlshowdispj=0;
+int lastframetime=0;
+int thisframetime;
+int tcnti,tcntj;
+int relyonrefresh=0;
+int slomo=0;
+int slocount=20;
+int expectedtimeperframe=5000;
+
+void startgame();
+
+uint32_t timenow=0;
+uint32_t timestarted=0;
+uint32_t showlevstat=3;
+
+void playGame();
+void initLevel();
+void repairBorder();
+void countDown(); 
+void doObjects(); 
+
+uint64_t timerfreq=0;
+
+implementation 
+
+uses gamedata, timing, loadlevel, objBug, objConsole, objExplosion, objKnik, objOrange, objZonk;
+
+uint32_t gettimeuseconds();
+int appIdle();
+int getdemomove();
+void startgame();
+void gamekeypressed(int);
+void endgame();
+
+int getdemomove()
+{	
+	if (demo.frame>=timing.m1) demo.frame=0;
+	// if it's one of the 8 times that movement is sampled
+	if (timing.isoct(demo.frame))
+	{
+		if (!demo.mcnt)
+		{			
+			demo.move=demo.dat[demo.pos++];
+			if (demo.move==0xff) 
+			{
+				demo.length=0;
+				return 0;
+			}
+			demo.mcnt=(demo.move>>4)+1;
+			demo.move&=0x0f;
+		}
+		demo.mcnt--;
+	}
+	demo.frame++;
+	if (demo.move>9) return 0;
+	return demo.move;
+}
+
+void startgame()
+{
+	if (!loadLevel("data/levels/orig-012.sp")) return; 
+}
+
+void endgame()
+{	
+}
+
+void renderframe()
+{
+}
+	
+int appIdle()
+{
+/*
+	if (menumode || !appActive) return 1;	
+	zoomOnMurphy();
+
+	//lastframetime=gettimeuseconds();
+	renderframe();
+	thisframetime=gettimeuseconds();	
+	timenow=gettimeuseconds();
+	if (gamemode==GAMEMODE_NORMAL) 
+	{
+		if ((thisframetime-lastframetime)>200000) thisframetime=lastframetime+10000;		
+		if (relyonrefresh) playGame();
+		else while ((thisframetime-lastframetime)>6000)
+		{
+			lastframetime+=expectedtimeperframe;
+			playGame();
+		}		
+	}
+*/
+	return 0; 
+}
+
+void playGame()
+{
+	/*
+	if (slomo)
+	{
+		if (slocount-- >0) return;
+		slocount=80;
+	}
+	if (gamelost&&(!endgamecountdown)) endgamecountdown=100;
+	if (endgamecountdown)
+	{
+		endgamecountdown--;
+		if (!endgamecountdown) 
+		{
+			switchtomenumode();
+			return;
+		}
+	}
+	if (moviefile!=-1) 
+	{
+		ldt[0].b.extra=lastactionkey;
+		_write(moviefile,ldt,sizeof(ldt));
+		ldt[0].b.extra=0;
+	}
+	doMurphy();
+	zoomOnMurphy();
+	doObjects();
+	*/	
+}
+
+
+
+void doObjects()
+{
+	int i,typ,tb,tf;
+	for (i=lvlwidth+1; i<(lvlheight-1)*lvlwidth; i++) 
+	{
+		typ=ldt[i].typ;
+		tb=typ & 0xf0;
+		tf=typ & 0xff;
+		if (typ & TF_ORANGE) doobj_orange(i);
+		else if (typ & TF_FALLING) doobj_zonk(i);
+		else if (typ & TF_ENEMY)   doobj_knik(i);
+		else if (tf == TB_CONSOLE) doobj_console(i);
+		else if (tf == TX_EXPLOSION) doobj_explosion(i); 
+	}
+}

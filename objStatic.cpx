@@ -1,0 +1,10 @@
+interface
+
+void dispTile(GLfloat x, GLfloat y, int tile);
+
+implementation
+
+void dispTile(GLfloat x, GLfloat y, int tile)
+{
+}
+

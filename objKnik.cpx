@@ -1,0 +1,16 @@
+interface
+
+void doobj_knik(int loc);
+void display_knik(int loc);
+
+implementation
+
+uses gamedata;
+
+void doobj_knik(int loc)
+{
+}
+
+void display_knik(int loc)
+{
+}

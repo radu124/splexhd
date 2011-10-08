@@ -1,0 +1,16 @@
+interface
+
+void doobj_orange(int loc);
+void display_orange(int loc);
+
+implementation
+
+uses gamedata;
+
+void doobj_orange(int loc)
+{
+}
+
+void display_orange(int loc)
+{
+}

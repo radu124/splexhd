@@ -1,0 +1,16 @@
+interface
+
+void doobj_explosion(int loc);
+void display_explosion(int loc);
+
+implementation
+
+uses gamedata;
+
+void doobj_explosion(int loc)
+{
+}
+
+void display_explosion(int loc)
+{
+}

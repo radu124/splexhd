@@ -1,0 +1,50 @@
+interface
+
+void renderscene();
+
+implementation
+
+GLfloat ts=22;
+
+void painttex(GLfloat i, GLfloat j, int id)
+{
+	i*=ts;
+	j*=ts;
+	if (id!=0) glBindTexture(GL_TEXTURE_2D,gettex(0,id));
+	else {
+		glBindTexture(GL_TEXTURE_2D,0);
+		glColor4f(0,0,0,1);
+	}
+	glBegin(GL_TRIANGLE_STRIP);
+	glTexCoord2f(0.0 , 0.0); glVertex3f(  0+j,  0+i, 0);
+	glTexCoord2f(1.0 , 0.0); glVertex3f( ts+j,  0+i, 0);
+	glTexCoord2f(0.0 , 1.0); glVertex3f(  0+j, ts+i, 0);
+	glTexCoord2f(1.0 , 1.0); glVertex3f( ts+j, ts+i, 0);
+	glEnd();
+	glColor4f(1,1,1,1);
+	glBindTexture(GL_TEXTURE_2D,0);
+}
+
+void renderscene()
+{
+	int i,j;
+	ts+=0.05;
+	if (ts>64) ts=22;
+	
+	if (ldt==NULL) return;
+	for (i=0; i<lvlheight; i++) for (j=0; j<lvlwidth; j++)
+	{
+		int typ=ldt[i*lvlwidth+j].typ;
+		int tf=typ & 0xff;
+		int painttyp=tf;
+		if (tf>=30) painttyp=0;
+		if (tf==TX_ZONK    ) painttyp=TB_ZONK;
+	    if (tf==TX_KNIK    ) painttyp=TB_KNIK;
+	    if (tf==TX_ELECTRON) painttyp=TB_ELECTRON;
+	    if (tf==TX_ORANGE  ) painttyp=TB_ORANGE;
+	    if (tf==TX_YELLOW  ) painttyp=TB_YELLOW;
+	    if (tf==TX_INFOTRON) painttyp=TB_INFOTRON;
+	    
+		painttex(i,j,painttyp);
+	}
+}

@@ -12,23 +12,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 *******************************************************************/  
   
-uses includes, utils, font, sprites, globals, audio, effects, verbosity, joystick, video, keyboard;
+uses includes, utils, font, sprites, globals, audio, effects, verbosity, joystick, video, keyboard, play;
 
-void renderscene()
-{
-	int i;
-	for (i=0; i<20; i++)
-	{
-		glBindTexture(GL_TEXTURE_2D,gettex(0,i+1));
-		glBegin(GL_TRIANGLE_STRIP);
-		glTexCoord2f(0.0 , 1.0); glVertex3f(  0+i*64,  0, 0);
-		glTexCoord2f(1.0 , 1.0); glVertex3f( 64+i*64,  0, 0);
-		glTexCoord2f(0.0 , 0  ); glVertex3f(  0+i*64, 64, 0);
-		glTexCoord2f(1.0 , 0  ); glVertex3f( 64+i*64, 64, 0);
-		glEnd();
-		glBindTexture(GL_TEXTURE_2D,0);
-	}
-}
+uses display;
 
 void drawglstuff()
 {
@@ -81,7 +67,7 @@ int main( int argc, char* argv[] )
 	
 	SDL_Event event;
 	gameover = 0;
-
+	startgame();
 	/* message pump */
 	while (!gameover)
 	{

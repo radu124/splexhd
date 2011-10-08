@@ -1,0 +1,16 @@
+interface
+
+void doobj_zonk(int loc);
+void display_zonk(int loc);
+
+implementation
+
+uses gamedata;
+
+void doobj_zonk(int loc)
+{
+}
+
+void display_zonk(int loc)
+{
+}

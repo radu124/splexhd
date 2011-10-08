@@ -14,33 +14,10 @@ GNU General Public License for more details.
   
 interface
 
-double gettimenow();
+uses includes;
 
 // defined in configuration
 int tsimatch(char *&s, const char *v);
-
-implementation
-		
-uses includes,message,verbosity;
-
-double gettimefloat()
-{
-	timeval t;
-#ifdef _WINDOWS
-	return SDL_GetTicks()*0.001;
-#else
-	gettimeofday(&t,NULL);
-	return t.tv_sec*1.0+t.tv_usec*0.000001;
-#endif
-}
-
-double origtime=gettimefloat();
-
-double gettimenow()
-{ 
-	double v=gettimefloat();
-	return v-origtime;
-}
 
 template <typename T>
 T* dorealloc(T* &adr,int len)
@@ -54,3 +31,9 @@ void mcolor::set()
 {
 	glColor4f(Red,Green,Blue,Alpha);
 }
+
+implementation
+		
+
+//	return SDL_GetTicks()*0.001;
+
