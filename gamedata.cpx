@@ -51,6 +51,19 @@ struct ttile
 	int counter; // aka basic, cdown
 	int xplode;
 	void set(int vtyp=0, int vcounter=0, int vexplode=0);
+	int isfree() { return typ==0; }
+	int ispcb() { return (typ&0xff)==TB_PCB; }
+/*
+#define ISFREEFORZONK(coord) (ISFREE(coord) || ((base==0x10) && (ldt[coord].base==0x0200)))
+#define ISLATRSVD(coord) (ldt[coord].b.extd==0xfd)
+#define ISREDDISK(coord) (ldt[coord].b.extd==0xe2)
+#define ISDETONATOR(coord) (ldt[coord].b.extd==0xe5)
+#define ISEXIT(coord) (ldt[coord].b.extd==0xe4)
+#define ISTKTRON(coord) (ldt[coord].b.extd==0x2f || ldt[coord].b.extd==0x2e)
+#define ISFREEORMURPH(coord) (ISFREE(coord) || ISMURPHVULNERABLE(coord))
+#define ISMURPHVULNERABLE(coord) (ldt[coord].b.extd>=0x80 && ldt[coord].b.extd<0xa0)
+*/
+	
 };
 
 /**

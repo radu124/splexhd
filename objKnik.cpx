@@ -1,7 +1,10 @@
 interface
 
+/** @file objKnik.cpx functions specific to scissors and electrons */
+
 void doobj_knik(int loc);
 void display_knik(int loc);
+void initobj_knik(int loc);
 
 implementation
 
@@ -9,8 +12,15 @@ uses gamedata;
 
 void doobj_knik(int loc)
 {
+	int base=ldt[loc].typ & 0xf0;
 }
 
 void display_knik(int loc)
 {
+}
+
+void initobj_knik(int loc)
+{
+	int base=ldt[loc].typ & 0xf0;
+	
 }

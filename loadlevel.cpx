@@ -93,8 +93,12 @@ int loadLevel(string s)
 		default: ldt[i].set(0);
 		}
 	}
-	demo.init();
 	repairBorder();
+	for (i=lvlwidth+1; i<(lvlheight-1)*lvlwidth; i++) 
+		if (ldt[i].typ & TF_ENEMY) 
+			initobj_knik(i);
+	
+	demo.init();
 	unmapFile(levfile);
 	return 1;
 }
