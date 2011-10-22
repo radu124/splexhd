@@ -1,5 +1,5 @@
 /*******************************************************************
-(C) 2011 by Radu Stefan
+(C) 2010 by Radu Stefan
 radu124@gmail.com
 
 This program is free software; you can redistribute it and/or modify
@@ -36,71 +36,27 @@ public:
 	string modifier;
 };
 
-#define __COND_DBG_OUT(cond,...) do { if (!cond) break; { MESSAGEWRITER __MW(stderr); __MW , __VA_ARGS__; }} while(0)
+#define __COND_DBG_OUT(cond,...) do { if (!(cond)) break; { MESSAGEWRITER __MW(stderr); __MW , __VA_ARGS__; }} while(0)
 
 #define __FILE_OUT(fou,...) do { {MESSAGEWRITER __MW(fou); __MW , __VA_ARGS__;} } while(0)
 
-#define assume(cond,msg) \
+#define assume(cond,...) \
 	do { if (cond) break; \
-	{ MESSAGEWRITER __MW(stderr); __MW , "\n!!! ERROR !!! in " ,__func__ ,"() at " , __FILE__ ,":",__LINE__ , "\n" , msg , "\n\n"; \
+	{ MESSAGEWRITER __MW(stderr); __MW , "\n!!! ERROR !!! in " ,__func__ ,"() at " , __FILE__ ,":",__LINE__ , "\n" , __VA_ARGS__ , "\n\n"; \
 	} assert(0); } while(0)
 
-#define assret(cond,msg) \
+#define assret(cond,...) \
 	do { if (cond) break; \
-	{ MESSAGEWRITER __MW(stderr); __MW , "\n!!! FAIL !!! in " ,__func__ ,"() at " , __FILE__ ,":",__LINE__ , "\n" , msg , "\n\n"; \
+	{ MESSAGEWRITER __MW(stderr); __MW , "\n!!! FAIL !!! in " ,__func__ ,"() at " , __FILE__ ,":",__LINE__ , "\n" , __VA_ARGS__ , "\n\n"; \
 	} return 0; } while(0)
 	
-#define warnif(cond,msg) \
+#define warnif(cond,...) \
 	do { if (!cond) break; \
-	{ MESSAGEWRITER __MW(stderr); __MW , "\n!!! WARNING !!! in " ,__func__ ,"() at " , __FILE__ ,":",__LINE__ , "\n" , msg , "\n\n"; \
+	{ MESSAGEWRITER __MW(stderr); __MW , "\n!!! WARNING !!! in " ,__func__ ,"() at " , __FILE__ ,":",__LINE__ , "\n" , __VA_ARGS__ , "\n\n"; \
 	} } while(0)
 
-#define assume_paranoid(cond,msg) assume(cond,msg)
+#define assume_paranoid(cond,...) assume(cond,__VA_ARGS__)
 
-#ifdef DISABLEMESSAGES
-int MSG_DISABLE_ALL=1;
-#else
-int MSG_DISABLE_ALL=0;
-#endif
-
-/// required-produced matrix
-const int ML_QUIET_REQWARN=0;
-const int ML_QUIET_REQINFO=0;
-const int ML_QUIET_REQDBG=0;
-
-const int ML_WARN_REQWARN=1 && !MSG_DISABLE_ALL;
-const int ML_WARN_REQINFO=0;
-const int ML_WARN_REQDBG=0;
-
-const int ML_INFO_REQWARN=1 && !MSG_DISABLE_ALL;
-const int ML_INFO_REQINFO=1 && !MSG_DISABLE_ALL;
-const int ML_INFO_REQDBG=0;
-
-const int ML_DBG_REQWARN=1 && !MSG_DISABLE_ALL;
-const int ML_DBG_REQINFO=1 && !MSG_DISABLE_ALL;
-const int ML_DBG_REQDBG=1 && !MSG_DISABLE_ALL;
-
-
-#define LEV_QUIET(a) ML_QUIET_##a
-
-#ifndef ALLQUIET
-
-#define LEV_INFO(a) ML_INFO_##a
-#define LEV_WARN(a) ML_WARN_##a
-#define LEV_DBG(a) ML_DBG_##a
-
-#else
-
-#define LEV_INFO(a) ML_QUIET_##a
-#define LEV_WARN(a) ML_QUIET_##a
-#define LEV_DBG(a) ML_QUIET_##a
-
-#endif
-
-
-#define INFO(tgt,...) __COND_DBG_OUT(MSG_##tgt(REQINFO),__VA_ARGS__)
-#define WARN(tgt,...) __COND_DBG_OUT(MSG_##tgt(REQWARN),__VA_ARGS__)
-#define DBG(tgt,...) __COND_DBG_OUT(MSG_##tgt(REQDBG),__VA_ARGS__)
 #define MESSAGE(...) __FILE_OUT(stdout,__VA_ARGS__)
 
 
