@@ -1,3 +1,16 @@
+/*******************************************************************
+(C) 2011 by Radu Stefan
+radu124@gmail.com
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; version 2 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+*******************************************************************/
 interface
 
 uses includes,globals;
@@ -7,7 +20,7 @@ void confread_##a(char *&s, a &v) \
 { \
 	 v=(a)multiplechoice(s,b); \
 	 DBG(CONFIG," value " #a " %d (from:%s)\n" &(int)v &s); \
-} 
+}
 
 #define CONFWRITE_GLfloat(a) fprintf(fou,"%f",a)
 #define CONFWRITE_int(a) fprintf(fou,"%d",a)
@@ -45,9 +58,9 @@ void confread_mcolor(char *&s, mcolor &v)
 {
 	const char *p=s;
 	if (p[0]=='#') p++;
-	if (strlen(s)<6) 
+	if (strlen(s)<6)
 	{
-		v=C_WHITE; 
+		v=C_WHITE;
 		return;
 	}
 	v.Red   = hexbyte(p+0)/255.0;

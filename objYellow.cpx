@@ -13,18 +13,13 @@ GNU General Public License for more details.
 *******************************************************************/
 interface
 
-void doobj_orange(int loc);
-void display_orange(int loc);
+void display_yellow(int loc);
 
 implementation
 
 uses gamedata;
 
-void doobj_orange(int loc)
-{
-}
-
-void display_orange(int loc)
+void display_yellow(int loc)
 {
 	GLfloat x,y;
 	computeloc(loc,y,x);

@@ -1,3 +1,16 @@
+/*******************************************************************
+(C) 2011 by Radu Stefan
+radu124@gmail.com
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; version 2 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+*******************************************************************/
 interface
 
 uses includes,confrw;
@@ -79,7 +92,7 @@ int tsamatch(char *&s, const char *prefix, const char *suffix, int &idx)
 	if (*ss!='[') return 0;
 	idxv=0;
 	ss++;
-	while (*ss>='0' && *ss<='9') 
+	while (*ss>='0' && *ss<='9')
 	{
 		idxv=idxv*10+*ss-'0';
 		ss++;
@@ -95,7 +108,7 @@ int tsamatch(char *&s, const char *prefix, const char *suffix, int &idx)
 	ss+=l;
 	if (*ss!='=' && *ss!=' ' && *ss!='\t') return 0;
 	while (*ss==' ' || *ss=='\t' || *ss=='=') ss++;
-	idx=idxv;	
+	idx=idxv;
 	s=ss;
 	DBG(CONFIG, "Matched array: %s[%d]%s", prefix, idx, suffix);
 	return 1;
@@ -118,7 +131,7 @@ int config_read()
 		char *p, *sav;
 		// eliminate CR,LF at the end of line
 		p=line+strlen(line)-1;
-		while (p>=line) 
+		while (p>=line)
 		{
 			if (*p!=10 && *p!=13) break;
 			*p=0;
@@ -184,7 +197,7 @@ void init_config()
 {
 	int i;
 	//findvideomodes();
-	
+
 #ifdef _WINDOWS
 	_TCHAR homefolder[MAX_PATH];
 	configFile="splexhd.ini";

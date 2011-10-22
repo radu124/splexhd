@@ -10,7 +10,7 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
-*******************************************************************/  
+*******************************************************************/
 
 interface
 
@@ -24,8 +24,8 @@ void initviewport();
 implementation
 
 uses includes,globals,sprites,font;
-
 int windowres_x, windowres_y;
+
 tVideoMode origres;
 
 void videoToFullscreen()
@@ -79,15 +79,15 @@ void doResize(int w, int h)
 {
 	scr_width=w;
 	scr_height=h;
-	scrsurface=SDL_SetVideoMode(scr_width, scr_height, 
-		((fullscreenmode==1)&&fsvideomode->bpp!=origres.bpp)?fsvideomode->bpp:0, 
-		SDL_HWSURFACE | SDL_OPENGL | SDL_RESIZABLE | 
+	scrsurface=SDL_SetVideoMode(scr_width, scr_height,
+		((fullscreenmode==1)&&fsvideomode->bpp!=origres.bpp)?fsvideomode->bpp:0,
+		SDL_HWSURFACE | SDL_OPENGL | SDL_RESIZABLE |
 		((fullscreenmode==1)?SDL_FULLSCREEN:0));
 	if (!scrsurface->flags & SDL_HWSURFACE)
 		WARN(VIDEO,"No hardware surface resizing to %d x %d\n", scr_width, scr_height);
-	initviewport();	
+	initviewport();
 	glEnable( GL_TEXTURE_2D );
-	glEnable (GL_BLEND); 
+	glEnable (GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	INFO(VIDEO,"RESIZE: %d %d\n", scr_width, scr_height);
@@ -129,8 +129,8 @@ void checkFullscreenRes()
 	int i;
 	for (i=0; i<videomodes.size(); i++)
 	{
-		if (scr_width==((tVideoMode *)videomodes[i])->width 
-		    && scr_height==((tVideoMode *)videomodes[i])->height) 
+		if (scr_width==((tVideoMode *)videomodes[i])->width
+		    && scr_height==((tVideoMode *)videomodes[i])->height)
 			return;
 	}
 	video_dofullscreen=false;

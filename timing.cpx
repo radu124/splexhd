@@ -1,3 +1,16 @@
+/*******************************************************************
+(C) 2011 by Radu Stefan
+radu124@gmail.com
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; version 2 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+*******************************************************************/
 interface
 
 struct ttiming
@@ -13,10 +26,18 @@ struct ttiming
 	int enemymove;
 	int enemymoveshort;
 	int &enemyrotate;
+	int &murphmove;
+	int murphvanishing;
+	int &zonkmove;
+	int &zonkfall;
+	int explosion;
 	int isoct(int i);
 	void init(int scale);
 	ttiming()
-		:enemyrotate(o8) { init(16); }
+		:enemyrotate(o8)
+		,murphmove(o8)
+		,zonkmove(o8)
+		,zonkfall(o8) { init(8); }
 } timing;
 
 implementation
@@ -49,4 +70,6 @@ void ttiming::init(int scale)
 	reddiskblow  =m5;
 	enemymove      = o8;
 	enemymoveshort = o7;
+	murphvanishing = m4;
+	explosion      = m5;
 }

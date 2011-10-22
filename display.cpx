@@ -1,3 +1,16 @@
+/*******************************************************************
+(C) 2011 by Radu Stefan
+radu124@gmail.com
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; version 2 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+*******************************************************************/
 interface
 
 void renderscene();
@@ -8,7 +21,7 @@ void renderscene();
  * @param locy - position on the y (vertical) axis, axis points down
  * @param locx - position on the x (horizontal) axis, axis points right
  */
-void computeloc(int loc, GLfloat &locy, GLfloat &locx);
+void computeloc(int loc, GLfloat &locy, GLfloat &locx, int flags=0);
 
 /**
  * level scroll within screen
@@ -18,7 +31,7 @@ int scrdx,scrdy;
 /**
  * tile size
  */
-GLfloat ts=24;
+GLfloat ts=64;
 
 /**
  * paint a texture at the given coordinates
@@ -32,12 +45,15 @@ void painttex(GLfloat i, GLfloat j, int id, int group=0, int rot=0);
 
 implementation
 
-void computeloc(int loc, GLfloat &locy, GLfloat &locx)
+uses objMurph, objKnik, objZonk, objOrange, objYellow, objVanishing;
+
+void computeloc(int loc, GLfloat &locy, GLfloat &locx, int flags)
 {
-	locy=(loc/lvlwidth)*ts-scrdx;
-	locx=(loc%lvlwidth)*ts-scrdy;
+	locy=(loc/lvlwidth)*ts-scrdy;
+	locx=(loc%lvlwidth)*ts-scrdx;
 	int typ=ldt[loc].typ & 0xff;
 	if (typ<0x40) return;
+	if (flags&1) return;
 	int disp=animprogress(ldt[loc].counter,timing.o8,-ts);
 	switch (typ & 0x0f)
 	{
@@ -99,8 +115,6 @@ void renderscene()
 
 		if (tf>=0x40) painttyp=0;
 		if (tf==TX_ZONK    ) painttyp=TB_ZONK;
-	    if (tf==TX_ORANGE  ) painttyp=TB_ORANGE;
-	    if (tf==TX_YELLOW  ) painttyp=TB_YELLOW;
 	    if (tf==TX_INFOTRON) painttyp=TB_INFOTRON;
 		//if ((tf&0xf0)==TX_KNIK) painttyp=TB_INFOTRON;
 		if ((tf&0xf0)==0xf0)
@@ -112,9 +126,14 @@ void renderscene()
 	}
 	for (i=0; i<lvlheight*lvlwidth; i++)
 	{
-		int typ=ldt[i].typ;
-		int tb=typ & 0xf0;
-		if (tb==TX_KNIK    ) display_knik(i);
-	    if (tb==TX_ELECTRON) display_electron(i);
+		int tx=ldt[i].xtyp();
+		if (tx==TX_KNIK      ) display_knik(i);
+	    if (tx==TX_ELECTRON  ) display_electron(i);
+	    if (tx==TX_MURPH     ) display_murphy(i);
+		if (tx==TX_ZONK      ) display_zonk(i);
+		if (tx==TX_INFOTRON  ) display_infotron(i);
+		if (tx==TX_ORANGE    ) display_orange(i);
+		if (tx==TX_YELLOW    ) display_yellow(i);
+		if (tx==TX_VANISHING ) display_vanishing(i);
 	}
 }

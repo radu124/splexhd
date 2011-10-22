@@ -1,3 +1,16 @@
+/*******************************************************************
+(C) 2011 by Radu Stefan
+radu124@gmail.com
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; version 2 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+*******************************************************************/
 interface
 
 uses includes;
@@ -37,7 +50,7 @@ int animprogress(int counter, int maxcounter, int animstart, int animstop=0);
 
 implementation
 
-uses gamedata, timing, loadlevel, objBug, objConsole, objExplosion, objKnik, objOrange, objZonk;
+uses gamedata, timing, loadlevel, objBug, objConsole, objExplosion, objKnik, objOrange, objZonk, objMurph, objVanishing;
 
 uint32_t gettimeuseconds();
 int appIdle();
@@ -77,7 +90,7 @@ int getdemomove()
 
 void startgame()
 {
-	if (!loadLevel("data/levels/orig-012.sp")) return;
+	if (!loadLevel("data/levels/orig-003.sp")) return;
 }
 
 void endgame()
@@ -92,7 +105,6 @@ int appIdle()
 {
 /*
 	if (menumode || !appActive) return 1;
-	zoomOnMurphy();
 
 	//lastframetime=gettimeuseconds();
 	renderframe();
@@ -139,7 +151,12 @@ void playGame()
 	doMurphy();
 	zoomOnMurphy();
 	*/
-	if (game.timenow-game.timelastmove>50) doObjects();
+	if (game.timenow-game.timelastmove>30)
+	{
+		doObjects();
+		doobj_murphy(game.murphloc);
+		zoomon_murphy(game.murphloc);
+	}
 }
 
 
@@ -147,20 +164,34 @@ void playGame()
 void doObjects()
 {
 	game.timelastmove=game.timenow;
-	int i,typ,tb,tf;
+	int i,typ,tb,tx;
 	for (i=lvlwidth+1; i<(lvlheight-1)*lvlwidth; i++)
 	{
 		int cnt=ldt[i].counter;
 		if (cnt) ldt[i].counter=--cnt;
 		typ=ldt[i].typ;
-		tb=typ & 0xf0;
-		tf=typ & 0xff;
-		if (!cnt && tb==TX_MOVEOUT)
-			ldt[i].typ=tb=typ=0;
+		tx=typ & 0xf0;
+		tb=typ & 0xff;
 		// call the appropriate function based on object time
-		if (typ & TF_ORANGE) doobj_orange(i);
-		else if (typ & TF_FALLING) doobj_zonk(i);
-		else if (tb == TX_KNIK || tb==TX_ELECTRON)   doobj_knik(i);
-		else if (tf == TX_EXPLOSION) doobj_explosion(i);
+		switch (tx)
+		{
+		case TX_MOVEOUT:
+			if (!cnt) ldt[i].set(0);
+			break;
+		case TX_ORANGE:
+			doobj_orange(i);
+			break;
+		case TX_ZONK: // zonk and infotron behave similarly
+		case TX_INFOTRON:
+			doobj_zonk(i);
+			break;
+		case TX_KNIK:
+		case TX_ELECTRON:
+			doobj_knik(i);
+			break;
+		case TX_VANISHING:
+			doobj_vanishing(i);
+			break;
+		}
 	}
 }

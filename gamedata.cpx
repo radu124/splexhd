@@ -1,3 +1,16 @@
+/*******************************************************************
+(C) 2011 by Radu Stefan
+radu124@gmail.com
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; version 2 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+*******************************************************************/
 interface
 
 /**
@@ -12,6 +25,24 @@ enum TTHEADING {
 	TH_ANTICLOCK=0x08,
 	TH_CLOCKWISE=0x0c
 };
+/**
+ * Additional heading constants due to value overlap
+ */
+enum TTHEADINGM {
+	TH_NORMAL=0x00,      // object is in a normal state, not going anywhere
+	TH_VANISHING=0x01,   // adjacent objects eaten by murphy without moving
+	TH_PREPAREFALL=0x02, // zonks and infotrons have a special state, prepare to fall
+	TH_MOVEDOUBLE=0x08   // murphy can move two squares through a port
+};
+
+/**
+ * vanishing object types
+ */
+enum TTVANISHING {
+	TV_REDDISK=0x05,
+	TV_EXPLODE=0x06,
+	TV_EXPLODEINFO=0x07
+};
 
 /**
  * Tile type constants, defined as enum for simplicity
@@ -23,6 +54,7 @@ enum TTFLAGS {
 	TB_MURPHY      =    0x03,
 	TB_INFOTRON    =    0x04,
 	TB_CONCRETE    =    0x06,
+	TB_EXIT        =    0x07,
 	TB_ORANGE      =    0x08,
 	TB_PORTRIGHT   =    0x09,
 	TB_PORTDOWN    =    0x0a,
@@ -39,13 +71,14 @@ enum TTFLAGS {
 	TB_BUG         =    0x19,
 	TB_MYTILE      =    0x29, // 41
 	// TX = extended IDs we assign here to tiles that move
-	TX_EXPLOSION   =    0x30,
+	TX_VANISHING   =    0x70,
 	TX_KNIK        =    0x80,
 	TX_ELECTRON    =    0x90,
 	TX_ORANGE      =    0xa0,
 	TX_YELLOW      =    0xb0,
 	TX_ZONK        =    0xc0,
 	TX_INFOTRON    =    0xd0,
+	TX_MURPH       =    0xe0,
 	TX_MOVEOUT     =    0xf0,
 	// TF = tile flags, put tiles in categories to facilitate decisions
 	// TD = flag combinations, to avoid checking for flags with plain &
@@ -54,11 +87,7 @@ enum TTFLAGS {
 	TF_SOLID       =  0x0400,
 	TF_PORT        =  0x0800,
 	TF_SPECIAL     =  0x1000,
-	TD_PORTSPECIAL =  0x1800,
-	TF_ENEMY       =  0x2000,
-	TF_FALLING     =  0x4000,
-	TF_ORANGE      =  0x8000,
-	TD_OFALLING    =  0xc000
+	TD_PORTSPECIAL =  0x1800
 };
 
 /**
@@ -73,13 +102,19 @@ struct ttile
 	int counter; // aka basic, cdown
 	int xplode;
 	void set(int vtyp=0, int vcounter=0, int vexplode=0);
-	inline int bt() { return typ&0xff; } // base type
+	inline int basetyp() { return typ&0xff; } // base type
+	inline int xtyp() { return typ&0xf0; } // base type
+	inline int movtyp() { return typ & 0x0c; }
+	inline int movfull() { return typ & 0x0f; }
+	inline int movdirection() { return typ & 0x03; }
 	inline int isfree() { return typ==0; }
-	inline int ispcb() { return (typ&0xff)==TB_PCB; }
-	inline int isportup()    { int tbase=typ&0xff; return tbase==TB_PORTUP    || tbase==TB_PORTUPDN || tbase==TB_PORTALL; }
-	inline int isportdown()  { int tbase=typ&0xff; return tbase==TB_PORTDOWN  || tbase==TB_PORTUPDN || tbase==TB_PORTALL; }
-	inline int isportleft()  { int tbase=typ&0xff; return tbase==TB_PORTLEFT  || tbase==TB_PORTLR   || tbase==TB_PORTALL; }
-	inline int isportright() { int tbase=typ&0xff; return tbase==TB_PORTRIGHT || tbase==TB_PORTLR   || tbase==TB_PORTALL; }
+	inline int isic() { return (typ & TF_IC)!=0; }
+	inline int ispcb() { return basetyp()==TB_PCB; }
+	inline int isenemy() { return xtyp()==TX_KNIK || xtyp()==TX_ELECTRON; }
+	inline int isportup()    { int tb=basetyp(); return tb==TB_PORTUP    || tb==TB_PORTUPDN || tb==TB_PORTALL; }
+	inline int isportdown()  { int tb=basetyp(); return tb==TB_PORTDOWN  || tb==TB_PORTUPDN || tb==TB_PORTALL; }
+	inline int isportleft()  { int tb=basetyp(); return tb==TB_PORTLEFT  || tb==TB_PORTLR   || tb==TB_PORTALL; }
+	inline int isportright() { int tb=basetyp(); return tb==TB_PORTRIGHT || tb==TB_PORTLR   || tb==TB_PORTALL; }
 
 /*
 #define ISFREEFORZONK(coord) (ISFREE(coord) || ((base==0x10) && (ldt[coord].base==0x0200)))
@@ -129,23 +164,28 @@ enum enum_gamemode{
  */
 struct tgamestate
 {
-	int mcoord;
+	int keydown[5];
 	int mode; //=0;
 	int lost; //=0;
 	int gravity;  //=0;
 	int infotronsneeded;  //=0;
-	int murphlastlr;      //=0;
-	int endgamecountdown; //=0;
+	int murphloc;
+	int murphlastleft;    //=0;
+	int murphdead;        //=0;
+	int murphsdinner;
+	int murphlookat;
+	int ended; //=0;
 	int freezezonks;
 	int freezeenemies;
 	int reddisklocation;
 	int reddiskcount;
-	int murphdead;        //=0;
 	uint32_t reddisktimeout;
 	int timestarted;
 	int timepaused;
 	int timenow;
 	int timelastmove;
+	int zonkhitleft;
+	int zonkhitright;
 	void init();
 } game;
 
@@ -181,10 +221,12 @@ void tdemo::init()
 void tgamestate::init()
 {
 	mode=GAMEMODE_NORMAL;
-	mcoord=0;
+	murphloc=0;
 	lost=0;
-	endgamecountdown=0;
+	ended=0;
 	murphdead=0;
+	murphlastleft=0;
+	murphsdinner=0;
 	reddiskcount=0;
 	reddisktimeout=0;
 	reddisklocation=0;
