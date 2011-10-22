@@ -115,6 +115,7 @@ int trygrab(int loc, int i, int dest)
 		// only for infotrons at rest
 		ldt[dest].set(TX_VANISHING | TB_INFOTRON, timing.zonkmove);
 		effect_start(SE_infotron);
+		if (game.infotronsneeded) game.infotronsneeded--;
 		return 1;
 	}
 	if (ldt[dest].basetyp()==TB_REDDISK)

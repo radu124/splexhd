@@ -69,6 +69,8 @@ void zonkhitnoise(int loc)
 {
 	int locx=loc%lvlwidth;
 	int murphx=loc%lvlwidth;
+	// here we compute where the sound should come from
+	game.sfxzonkleft=game.sfxzonkright=1;
 }
 
 void doobj_zonk(int loc)

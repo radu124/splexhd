@@ -18,8 +18,15 @@ void display_console(int loc);
 
 implementation
 
+uses objExplosion;
+
 void touch_console()
 {
+	int i,j;
+	for (i=lvlwidth+1; i<(lvlheight-1)*lvlwidth; i++)
+	{
+		if (ldt[i].xtyp()==TX_YELLOW) explode_region(i);
+	}
 };
 
 void display_console(int loc)

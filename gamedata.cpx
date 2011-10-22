@@ -188,8 +188,10 @@ struct tgamestate
 	int timenow;          /// time at current level updated
 	int timelastmove;     /// time of the last step
 
-	int zonkhitleft;      /// for producing sound effects on zonk fall, stereo
-	int zonkhitright;
+	int sfxzonkleft;      /// for producing sound effects on zonk fall, stereo
+	int sfxzonkright;
+	int sfxexplodeleft;   /// for producing explosion sound effects, stereo
+	int sfxexploderight;
 
 	void init();
 } game;

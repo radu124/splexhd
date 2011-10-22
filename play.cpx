@@ -90,7 +90,7 @@ int getdemomove()
 
 void startgame()
 {
-	if (!loadLevel("data/levels/orig-003.sp")) return;
+	if (!loadLevel("data/levels/orig-001.sp")) return;
 }
 
 void endgame()
@@ -156,6 +156,17 @@ void playGame()
 		doObjects();
 		doobj_murphy(game.murphloc);
 		zoomon_murphy(game.murphloc);
+		if (game.sfxexplodeleft || game.sfxexploderight)
+		{
+			effect_start(SE_explosion);
+			game.sfxexplodeleft=game.sfxexploderight=0;
+		}
+		if (game.sfxzonkleft || game.sfxzonkright)
+		{
+			effect_start(SE_hit);
+			game.sfxzonkleft=game.sfxzonkright=0;
+		}
+
 	}
 }
 

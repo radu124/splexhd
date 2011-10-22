@@ -1,16 +1,26 @@
 interface
 
-void doobj_explosion(int loc);
-void display_explosion(int loc);
+void explode_region(int loc);
+void explode_tile(int loc);
 
 implementation
 
-uses gamedata;
+uses gamedata,timing;
 
-void doobj_explosion(int loc)
+void explode_region(int loc)
 {
+	int j;
+	for (j=-1; j<2; j++)
+	{
+		explode_tile(above(loc)+j);
+		explode_tile(loc+j);
+		explode_tile(below(loc)+j);
+	}
 }
 
-void display_explosion(int loc)
+void explode_tile(int loc)
 {
+	int typ=ldt[loc].typ;
+	ldt[loc].set(TX_VANISHING | TV_EXPLODE, timing.explosion);
+	game.sfxexplodeleft=game.sfxexploderight=1;
 }
