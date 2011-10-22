@@ -46,6 +46,10 @@ int loadLevel(string s)
 	lvlheight=24;
 	for (i=lvlwidth+1; i<(lvlheight-1)*lvlwidth; i++) if (levdat[i]==TB_MURPHY)
 		{ game.murphloc=i; break; }
+	for (i=lvlwidth+1; i<(lvlheight-1)*lvlwidth; i++) if (levdat[i]==TB_INFOTRON)
+		game.infotronsneeded++;
+	if (levdat[1470]) game.infotronsneeded=levdat[1470];
+	game.gravity=levdat[1444]&1;
 	// mo murphy
 	if (!game.murphloc)
 	{

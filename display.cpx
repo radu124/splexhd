@@ -41,11 +41,11 @@ GLfloat ts=64;
  * @param group the group of textures
  * @param rot rotation in degrees
  */
-void painttex(GLfloat i, GLfloat j, int id, int group=0, int rot=0);
+void painttex(GLfloat i, GLfloat j, int id, int group=0, int rot=0, int flags=0);
 
 implementation
 
-uses objMurph, objKnik, objZonk, objOrange, objYellow, objVanishing;
+uses objMurph, objKnik, objZonk, objOrange, objYellow, objVanishing, status;
 
 void computeloc(int loc, GLfloat &locy, GLfloat &locx, int flags)
 {
@@ -72,10 +72,12 @@ void computeloc(int loc, GLfloat &locy, GLfloat &locx, int flags)
 	}
 }
 
-void painttex(GLfloat i, GLfloat j, int id, int group, int rot)
+void painttex(GLfloat i, GLfloat j, int id, int group, int rot, int flags)
 {
 	int texid;
 	if (!id && !group) return;
+	GLfloat texl=0, texr=1.0;
+	GLfloat sp_width=ts,sp_height=ts;
 	texid=gettex(group,id);
 	if (texid!=0) glBindTexture(GL_TEXTURE_2D,texid);
 	else {
@@ -88,11 +90,23 @@ void painttex(GLfloat i, GLfloat j, int id, int group, int rot)
 	{
 		glRotatef(rot,0,0,1);
 	}
+	if (flags & 1)
+	{
+		texl=1.0;
+		texr=0;
+	}
+	if (flags & 2)
+	{
+		sp_width=ts*0.8;
+		sp_height=ts*1.4;
+	}
+	sp_width*=0.5;
+	sp_height*=0.5;
 	glBegin(GL_TRIANGLE_STRIP);
-	glTexCoord2f(0.0 , 0.0); glVertex3f(-ts*0.5,-ts*0.5, 0);
-	glTexCoord2f(1.0 , 0.0); glVertex3f( ts*0.5,-ts*0.5, 0);
-	glTexCoord2f(0.0 , 1.0); glVertex3f(-ts*0.5, ts*0.5, 0);
-	glTexCoord2f(1.0 , 1.0); glVertex3f( ts*0.5, ts*0.5, 0);
+	glTexCoord2f(texl , 0.0); glVertex3f(-sp_width,-sp_height, 0);
+	glTexCoord2f(texr , 0.0); glVertex3f( sp_width,-sp_height, 0);
+	glTexCoord2f(texl , 1.0); glVertex3f(-sp_width, sp_height, 0);
+	glTexCoord2f(texr , 1.0); glVertex3f( sp_width, sp_height, 0);
 	glEnd();
 	glPopMatrix();
 	glColor4f(1,1,1,1);
@@ -136,4 +150,5 @@ void renderscene()
 		if (tx==TX_YELLOW    ) display_yellow(i);
 		if (tx==TX_VANISHING ) display_vanishing(i);
 	}
+	display_status();
 }

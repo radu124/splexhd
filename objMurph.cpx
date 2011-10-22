@@ -35,7 +35,7 @@ void zoomon_murphy(int loc);
 
 implementation
 
-uses gamedata, audio, effects, objConsole, video;
+uses includes, gamedata, audio, effects, objConsole, video;
 
 /**
  * Try moving into a tile by eating its contents
@@ -216,29 +216,29 @@ void display_murphy(int loc)
 		painttex(y,x,game.murphsdinner,TT_tiles,0);
 	}
 	computeloc(loc,y,x);
-	painttex(y,x,murphprogress,TT_murphwalk,0);
+	painttex(y,x,murphprogress,TT_murphwalk,0,game.murphlastleft);
 	// Murph is passing through a port, draw murph twice and the port over him
 	if (ldt[loc].movtyp()==TH_MOVEDOUBLE)
 	{
 		switch(ldt[loc].movdirection())
 		{
 			case TH_UP:
-				painttex(y+ts,x,murphprogress,TT_murphwalk,0);
+				painttex(y+ts,x,murphprogress,TT_murphwalk,game.murphlastleft);
 				computeloc(t=below(loc),y,x);
 				painttex(y,x,ldt[t].basetyp());
 				break;
 			case TH_DOWN:
-				painttex(y-ts,x,murphprogress,TT_murphwalk,0);
+				painttex(y-ts,x,murphprogress,TT_murphwalk,game.murphlastleft);
 				computeloc(above(loc),y,x);
 				painttex(y,x,ldt[t].basetyp());
 				break;
 			case TH_LEFT:
-				painttex(y,x+ts,murphprogress,TT_murphwalk,0);
+				painttex(y,x+ts,murphprogress,TT_murphwalk,game.murphlastleft);
 				computeloc(rightof(loc),y,x);
 				painttex(y,x,ldt[t].basetyp());
 				break;
 			case TH_RIGHT:
-				painttex(y,x-ts,murphprogress,TT_murphwalk,0);
+				painttex(y,x-ts,murphprogress,TT_murphwalk,game.murphlastleft);
 				computeloc(leftof(loc),y,x);
 				painttex(y,x,ldt[t].basetyp());
 				break;
@@ -264,4 +264,7 @@ void zoomon_murphy(int loc)
 	}
 	scrdx=locx-trunc(scr_width/2-ts/2);
 	scrdy=locy-trunc(scr_height/2-ts/2);
+	if (game.forcecenter) return;
+	scrdx=max(0.0f,min((GLfloat) scrdx,ts*(lvlwidth+1)-scr_width));
+	scrdy=max(0.0f,min((GLfloat) scrdy,ts*(lvlheight)-scr_height));
 }

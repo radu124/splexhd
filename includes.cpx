@@ -10,8 +10,8 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
-*******************************************************************/  
-  
+*******************************************************************/
+
 interface
 
 #include <stdlib.h>
@@ -20,7 +20,7 @@ interface
 #include <errno.h>
 #include <sys/time.h>
 #include "SDL.h"
-#include "SDL_opengl.h" 
+#include "SDL_opengl.h"
 #include "assert.h"
 #include <fcntl.h>
 #include <sys/stat.h>

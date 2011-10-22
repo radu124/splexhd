@@ -164,28 +164,33 @@ enum enum_gamemode{
  */
 struct tgamestate
 {
-	int keydown[5];
+	int keydown[5];       /// keys currently being pressed: UP,RIGHT,DOWN,LEFT,SPACE
 	int mode; //=0;
-	int lost; //=0;
-	int gravity;  //=0;
-	int infotronsneeded;  //=0;
-	int murphloc;
-	int murphlastleft;    //=0;
-	int murphdead;        //=0;
-	int murphsdinner;
-	int murphlookat;
-	int ended; //=0;
+	int lost;             /// 1 if game is lost
+	int ended;            /// whether the game ended, either win or lose
+
+	int gravity;          /// whether gravity is on
 	int freezezonks;
 	int freezeenemies;
-	int reddisklocation;
-	int reddiskcount;
-	uint32_t reddisktimeout;
-	int timestarted;
-	int timepaused;
-	int timenow;
-	int timelastmove;
-	int zonkhitleft;
+	int infotronsneeded;  /// infotrons needed to finish the level
+	int reddiskcount;     /// number of red disks available
+	int reddisklocation;  /// location of dropped red disk
+	int reddisktimeout;   /// timeout of murphy laying a red disk
+
+	int murphloc;         /// murphy's location
+	int murphlastleft;    /// whether murphy's last move was to the left
+	int murphsdinner;     /// type of tile currently being eaten
+	int murphlookat;      /// direction murphy is looking into after grab
+	int forcecenter;      /// center on murphy at any cost
+
+	int timestarted;      /// the time the level was started in milliseconds
+	int timepaused;       /// the time the level was paused n/a
+	int timenow;          /// time at current level updated
+	int timelastmove;     /// time of the last step
+
+	int zonkhitleft;      /// for producing sound effects on zonk fall, stereo
 	int zonkhitright;
+
 	void init();
 } game;
 
@@ -224,7 +229,6 @@ void tgamestate::init()
 	murphloc=0;
 	lost=0;
 	ended=0;
-	murphdead=0;
 	murphlastleft=0;
 	murphsdinner=0;
 	reddiskcount=0;

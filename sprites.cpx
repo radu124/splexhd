@@ -41,6 +41,10 @@ enum enum_tilesets {
 	TT_vanishpcb,
 	TT_console,
 	TT_bug,
+	TT_bigclock,
+	TT_bigtron,
+	TT_bigdisk,
+	TT_digits,
 	TT_last};
 
 int gettex(int i, int j)
@@ -84,4 +88,9 @@ void init_sprites()
 	_DEF_LOADIMG(vanishpcb);
 	_DEF_LOADIMG(console);
 	_DEF_LOADIMG(bug);
+
+	_DEF_LOADIMG(bigclock);
+	_DEF_LOADIMG(bigtron);
+	_DEF_LOADIMG(bigdisk);
+	loadImageSet((datadir+"/graphics/digits.png").c_str(),tiles[TT_digits],1);
 }
