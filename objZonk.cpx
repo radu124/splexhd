@@ -65,12 +65,27 @@ int zonktryslip(int loc)
 	return 0;
 }
 
-void zonkhitnoise(int loc)
+int zonkhit(int loc, int base)
 {
-	int locx=loc%lvlwidth;
-	int murphx=loc%lvlwidth;
-	// here we compute where the sound should come from
+	int BELOW=below(loc);
 	game.sfxzonkleft=game.sfxzonkright=1;
+	if (ldt[BELOW].xtyp()==TX_ORANGE)
+	{
+		explode_region(BELOW);
+		return 1;
+	}
+	if (ldt[BELOW].xtyp()==TX_YELLOW && base==TX_INFOTRON)
+	{
+		explode_region(BELOW);
+		return 1;
+	}
+	if (ldt[BELOW].xtyp()==TX_MURPH)
+	{
+		explode_region(BELOW);
+		game.lost=game.ended=1;
+		return 1;
+	}
+	return 0;
 }
 
 void doobj_zonk(int loc)
@@ -93,7 +108,7 @@ void doobj_zonk(int loc)
 	case TH_MOVEIN+TH_RIGHT:
 	case TH_MOVEIN+TH_DOWN:
 		if (zonktryfall(loc)) return;
-		zonkhitnoise(loc);
+		if (zonkhit(loc,base)) return;
 		if (zonktryslip(loc)) return;
 		ldt[loc].set(base);
 		return;

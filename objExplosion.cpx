@@ -21,6 +21,7 @@ void explode_region(int loc)
 void explode_tile(int loc)
 {
 	int typ=ldt[loc].typ;
+	if (ldt[loc].typ & TF_SOLID) return;
 	ldt[loc].set(TX_VANISHING | TV_EXPLODE, timing.explosion);
 	game.sfxexplodeleft=game.sfxexploderight=1;
 }

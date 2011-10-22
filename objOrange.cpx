@@ -22,6 +22,18 @@ uses gamedata;
 
 void doobj_orange(int loc)
 {
+	if (ldt[loc].counter!=0) return;
+	if (ldt[below(loc)].isfree())
+	{
+		ldt[below(loc)].set(TX_ORANGE | TH_MOVEIN | TH_DOWN, timing.zonkmove);
+		ldt[loc].set(TX_MOVEOUT | TH_DOWN, timing.zonkmove);
+		return;
+	}
+	if (ldt[loc].movdirection() == TH_DOWN)
+	{
+		// hit something
+		explode_region(loc);
+	}
 }
 
 void display_orange(int loc)

@@ -23,5 +23,5 @@ void display_yellow(int loc)
 {
 	GLfloat x,y;
 	computeloc(loc,y,x);
-	painttex(y,x,TB_ORANGE,TT_tiles,0);
+	painttex(y,x,TB_YELLOW,TT_tiles,0);
 }
