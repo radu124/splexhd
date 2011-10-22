@@ -10,8 +10,8 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
-*******************************************************************/  
-  
+*******************************************************************/
+
 uses includes, utils, font, sprites, globals, audio, effects, verbosity, joystick, video, keyboard, play;
 
 uses display;
@@ -19,6 +19,7 @@ uses display;
 void drawglstuff()
 {
 	//DBG(GL,"%d\n" &((int) scn.time));
+	playGame();
 	renderscene();
 	audio_yield();
 }
@@ -32,23 +33,23 @@ int main( int argc, char* argv[] )
 	// SDL_GetError());
 	init_fonts();
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-	
+
 	SDL_WM_SetCaption("SplexHD - Supaplex remake", "SDL");
 	/* create window */
 	scrsurface = SDL_SetVideoMode(
 		scr_width,scr_height,
-		 0, SDL_OPENGL | SDL_RESIZABLE | 
+		 0, SDL_OPENGL | SDL_RESIZABLE |
 		(video_dofullscreen?SDL_FULLSCREEN:0) );
 	fullscreenmode = video_dofullscreen;
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
 	INFO(SPRITES,"Maximum texture size:%d\n", maxTexSize);
 	init_joysticks();
 	glEnable( GL_TEXTURE_2D );
-	glEnable (GL_BLEND); 
+	glEnable (GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glAlphaFunc(GL_GREATER,0.1);
 	//glEnable(GL_ALPHA_TEST);
-	
+
 	//glBlendFunc (GL_BLEND_DST_ALPHA ,GL_SRC_ALPHA);
 	deffont.open(datadir+"/default.ttf");
 	init_sprites();
@@ -64,7 +65,7 @@ int main( int argc, char* argv[] )
 					      );
 	}
 	initviewport();
-	
+
 	SDL_Event event;
 	gameover = 0;
 	startgame();
@@ -82,7 +83,7 @@ int main( int argc, char* argv[] )
 			}
 			else
 				translateandhandleevent(event);
-				
+
 			switch (event.type) {
 				/* close button clicked */
 				case SDL_QUIT:

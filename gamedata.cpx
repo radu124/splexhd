@@ -1,9 +1,22 @@
 interface
 
 /**
- * Tile type flags, defined as enum for simplicity
+ * Object heading constants, define the direction objects move in
  */
-enum TTFLAGS { 
+enum TTHEADING {
+	TH_UP=0,
+	TH_RIGHT=1,
+	TH_DOWN=2,
+	TH_LEFT=3,
+	TH_MOVEIN=4,
+	TH_ANTICLOCK=0x08,
+	TH_CLOCKWISE=0x0c
+};
+
+/**
+ * Tile type constants, defined as enum for simplicity
+ */
+enum TTFLAGS {
 	// TB = tile base - this is the same id the tile has in the level file
 	TB_ZONK        =    0x01,
 	TB_PCB         =    0x02,
@@ -11,11 +24,20 @@ enum TTFLAGS {
 	TB_INFOTRON    =    0x04,
 	TB_CONCRETE    =    0x06,
 	TB_ORANGE      =    0x08,
+	TB_PORTRIGHT   =    0x09,
+	TB_PORTDOWN    =    0x0a,
+	TB_PORTLEFT    =    0x0b,
+	TB_PORTUP      =    0x0c,
 	TB_KNIK        =    0x11,
 	TB_YELLOW      =    0x12,
 	TB_CONSOLE     =    0x13,
+	TB_REDDISK     =    0x14,
+	TB_PORTUPDN    =    0x15,
+	TB_PORTLR      =    0x16,
+	TB_PORTALL     =    0x17,
 	TB_ELECTRON    =    0x18,
-
+	TB_BUG         =    0x19,
+	TB_MYTILE      =    0x29, // 41
 	// TX = extended IDs we assign here to tiles that move
 	TX_EXPLOSION   =    0x30,
 	TX_KNIK        =    0x80,
@@ -24,20 +46,20 @@ enum TTFLAGS {
 	TX_YELLOW      =    0xb0,
 	TX_ZONK        =    0xc0,
 	TX_INFOTRON    =    0xd0,
-	TX_LEAVING     =    0xf0,
+	TX_MOVEOUT     =    0xf0,
 	// TF = tile flags, put tiles in categories to facilitate decisions
 	// TD = flag combinations, to avoid checking for flags with plain &
-	TF_BUG         =  0x0100, 
-	TF_IC          =  0x0200, 
-	TF_SOLID       =  0x0400, 
-	TF_PORT        =  0x0800, 
-	TF_SPECIAL     =  0x1000, 
+	TF_BUG         =  0x0100,
+	TF_IC          =  0x0200,
+	TF_SOLID       =  0x0400,
+	TF_PORT        =  0x0800,
+	TF_SPECIAL     =  0x1000,
 	TD_PORTSPECIAL =  0x1800,
 	TF_ENEMY       =  0x2000,
 	TF_FALLING     =  0x4000,
 	TF_ORANGE      =  0x8000,
 	TD_OFALLING    =  0xc000
-	};
+};
 
 /**
  * one map tile
@@ -51,8 +73,14 @@ struct ttile
 	int counter; // aka basic, cdown
 	int xplode;
 	void set(int vtyp=0, int vcounter=0, int vexplode=0);
-	int isfree() { return typ==0; }
-	int ispcb() { return (typ&0xff)==TB_PCB; }
+	inline int bt() { return typ&0xff; } // base type
+	inline int isfree() { return typ==0; }
+	inline int ispcb() { return (typ&0xff)==TB_PCB; }
+	inline int isportup()    { int tbase=typ&0xff; return tbase==TB_PORTUP    || tbase==TB_PORTUPDN || tbase==TB_PORTALL; }
+	inline int isportdown()  { int tbase=typ&0xff; return tbase==TB_PORTDOWN  || tbase==TB_PORTUPDN || tbase==TB_PORTALL; }
+	inline int isportleft()  { int tbase=typ&0xff; return tbase==TB_PORTLEFT  || tbase==TB_PORTLR   || tbase==TB_PORTALL; }
+	inline int isportright() { int tbase=typ&0xff; return tbase==TB_PORTRIGHT || tbase==TB_PORTLR   || tbase==TB_PORTALL; }
+
 /*
 #define ISFREEFORZONK(coord) (ISFREE(coord) || ((base==0x10) && (ldt[coord].base==0x0200)))
 #define ISLATRSVD(coord) (ldt[coord].b.extd==0xfd)
@@ -63,7 +91,7 @@ struct ttile
 #define ISFREEORMURPH(coord) (ISFREE(coord) || ISMURPHVULNERABLE(coord))
 #define ISMURPHVULNERABLE(coord) (ldt[coord].b.extd>=0x80 && ldt[coord].b.extd<0xa0)
 */
-	
+
 };
 
 /**
@@ -116,6 +144,8 @@ struct tgamestate
 	uint32_t reddisktimeout;
 	int timestarted;
 	int timepaused;
+	int timenow;
+	int timelastmove;
 	void init();
 } game;
 
@@ -128,6 +158,12 @@ string levelname;
 
 int lvlwidth=60;  /// width of a level
 int lvlheight=24; /// height of a level
+
+inline int above(int i) { int res=i+delta[0]; return res<0?i:res; }
+inline int below(int i) { int res=i+delta[2]; return res>=(lvlwidth*lvlheight)?i:res; }
+inline int leftof(int i) { int res=i+delta[3]; return res<0?i:res; }
+inline int rightof(int i) { int res=i+delta[1]; return res>=(lvlwidth*lvlheight)?i:res; }
+
 
 implementation
 
@@ -153,5 +189,6 @@ void tgamestate::init()
 	reddisktimeout=0;
 	reddisklocation=0;
 	timestarted=SDL_GetTicks();
+	timelastmove=timestarted;
 	freezeenemies=0;
 }
