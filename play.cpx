@@ -158,12 +158,12 @@ void playGame()
 		zoomon_murphy(game.murphloc);
 		if (game.sfxexplodeleft || game.sfxexploderight)
 		{
-			effect_start(SE_explosion);
+			sfx_start(SE_explosion);
 			game.sfxexplodeleft=game.sfxexploderight=0;
 		}
 		if (game.sfxzonkleft || game.sfxzonkright)
 		{
-			effect_start(SE_hit);
+			sfx_start(SE_hit);
 			game.sfxzonkleft=game.sfxzonkright=0;
 		}
 

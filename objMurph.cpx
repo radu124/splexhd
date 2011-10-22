@@ -54,13 +54,13 @@ int tryeating(int loc, int i, int dest)
 	ldt[loc].set(TX_MOVEOUT + i, timing.murphmove);
 	if ((game.murphsdinner&0xf0)==TX_INFOTRON)
 	{
-		effect_start(SE_infotron);
+		sfx_start(SE_infotron);
 		if (game.infotronsneeded) game.infotronsneeded--;
 		game.murphsdinner=TB_INFOTRON;
 	}
 	if (game.murphsdinner==TB_PCB)
 	{
-		effect_start(SE_pcb);
+		sfx_start(SE_pcb);
 	}
 	if (game.murphsdinner==TB_REDDISK) game.reddiskcount++;
 	game.murphloc=dest;
@@ -107,14 +107,14 @@ int trygrab(int loc, int i, int dest)
 	{
 		// mind the bugs
 		ldt[dest].set(TX_VANISHING | TB_PCB, timing.zonkmove);
-		effect_start(SE_pcb);
+		sfx_start(SE_pcb);
 		return 1;
 	}
 	if (ldt[dest].basetyp()==TX_INFOTRON)
 	{
 		// only for infotrons at rest
 		ldt[dest].set(TX_VANISHING | TB_INFOTRON, timing.zonkmove);
-		effect_start(SE_infotron);
+		sfx_start(SE_infotron);
 		if (game.infotronsneeded) game.infotronsneeded--;
 		return 1;
 	}
@@ -176,7 +176,7 @@ void doobj_murphy(int loc)
 	{
 		if (ldt[dest[i]].basetyp()==TB_EXIT && !game.infotronsneeded)
 		{
-			effect_start(SE_victory);
+			sfx_start(SE_victory);
 			game.ended=1;
 			ldt[loc].set(TX_VANISHING | TB_MURPHY,timing.murphvanishing);
 			return;

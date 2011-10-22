@@ -57,13 +57,6 @@ int main( int argc, char* argv[] )
 	init_effects();
 	song_start(datadir+"/music/orig.ogg");
 	audio_yield();
-	if (0) {
-		int q;
-		for (q=0; q<90000; q++) DBG(AUDIO,"%09d %d %d\n" ,q
-			,playing.buffer[0][q]
-			,playing.buffer[1][q]
-					      );
-	}
 	initviewport();
 
 	SDL_Event event;
