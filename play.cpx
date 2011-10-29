@@ -186,8 +186,12 @@ void doObjects()
 	int i,typ,tb,tx;
 	for (i=lvlwidth+1; i<(lvlheight-1)*lvlwidth; i++)
 	{
+		ldt[i].oldtyp=ldt[i].typ;
+	}
+	for (i=lvlwidth+1; i<(lvlheight-1)*lvlwidth; i++)
+	{
 		int cnt=ldt[i].counter;
-		if (cnt) ldt[i].counter=--cnt;
+		if (cnt && (ldt[i].xtyp()==(ldt[i].oldtyp & 0xf0))) ldt[i].counter=--cnt;
 		typ=ldt[i].typ;
 		tx=typ & 0xf0;
 		tb=typ & 0xff;

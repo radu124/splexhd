@@ -29,11 +29,13 @@ void scenehandleevent(SDL_Event &event)
 	{
 		switch (event.key.keysym.sym)
 		{
-		case SDLK_UP:    game.keydown[0]=downval; break;
-		case SDLK_RIGHT: game.keydown[1]=downval; break;
-		case SDLK_DOWN:  game.keydown[2]=downval; break;
-		case SDLK_LEFT:  game.keydown[3]=downval; break;
-		case SDLK_SPACE: game.keydown[4]=downval; break;
+		case SDLK_UP:     game.keydown[0]=downval; break;
+		case SDLK_RIGHT:  game.keydown[1]=downval; break;
+		case SDLK_DOWN:   game.keydown[2]=downval; break;
+		case SDLK_LEFT:   game.keydown[3]=downval; break;
+		case SDLK_SPACE:  game.keydown[4]=downval; break;
+		case SDLK_ESCAPE: game.keydown[5]=downval; break;
+		case SDLK_RETURN: game.keydown[6]=downval; break;
 		}
 	}
 }

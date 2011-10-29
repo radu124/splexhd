@@ -57,7 +57,6 @@ int loadLevel(const uint8_t* levdat)
 	if (!game.murphloc)
 	{
 		game.murphloc=lvlwidth+1;
-		game.lost=1;
 	}
 	dorealloc(ldt,lvlheight*lvlwidth+4);
 	for (i=0; i<lvlheight*lvlwidth; i++)

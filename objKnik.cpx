@@ -51,10 +51,16 @@ void doobj_knik(int loc)
 		LEFT=below(loc);
 		RIGHT=above(loc);
 	}
+	if (ldt[AHEAD].xtyp()==TX_MURPH)
+	{
+		game.ended=1;
+		explode_region(AHEAD);
+		return;
+	}
 	switch (thh)
 	{
 	case TH_ANTICLOCK:
-		if (ldt[AHEAD].isfree())
+		if (ldt[AHEAD].isfreeormurph())
 		{
 			// move ahead
 			ldt[AHEAD].set(base | TH_MOVEIN | thd, timing.enemymove);
@@ -64,7 +70,7 @@ void doobj_knik(int loc)
 		}
 		return;
 	case TH_CLOCKWISE:
-		if (ldt[AHEAD].isfree())
+		if (ldt[AHEAD].isfreeormurph())
 		{
 			// move ahead
 			ldt[AHEAD].set(base | TH_MOVEIN | thd, timing.enemymove);
@@ -74,14 +80,14 @@ void doobj_knik(int loc)
 		}
 		return;
 	default: // MOVE, or INVALID
-		if (ldt[AHEAD].isfree() && !ldt[LEFT].isfree())
+		if (ldt[AHEAD].isfreeormurph() && !ldt[LEFT].isfreeormurph())
 		{
 			// move ahead
 			ldt[AHEAD].set(base | TH_MOVEIN | thd, timing.enemymove);
 			ldt[loc].set(TX_MOVEOUT | thd, timing.enemymove);
 			return;
 		}
-		if (ldt[RIGHT].isfree() && !ldt[LEFT].isfree())
+		if (ldt[RIGHT].isfreeormurph() && !ldt[LEFT].isfreeormurph())
 		{
 			// turn clockwise
 			ldt[loc].set(base | TH_CLOCKWISE | ((thd+1)&3), timing.enemyrotate);

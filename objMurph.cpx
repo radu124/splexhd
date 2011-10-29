@@ -37,6 +37,18 @@ implementation
 
 uses includes, gamedata, audio, effects, objConsole, video;
 
+int ttile::isdeadly()
+{
+	int tx=xtyp();
+	int th=movfull();
+	return tx==TX_MOVEOUT
+		|| (tx==TB_INFOTRON && th!=0)
+		|| (tx==TX_ZONK && th!=0)
+		|| tx==TX_KNIK
+		|| tx==TX_ELECTRON;
+
+}
+
 /**
  * Try moving into a tile by eating its contents
  * (works even when the tile is empty)
@@ -48,6 +60,12 @@ uses includes, gamedata, audio, effects, objConsole, video;
 int tryeating(int loc, int i, int dest)
 {
 	int result=ldt[dest].ispcb() || ldt[dest].isfree() || ldt[dest].xtyp()==TX_INFOTRON || ldt[dest].basetyp()==TB_REDDISK;
+	if (ldt[dest].isdeadly())
+	{
+		game.ended=1;
+		explode_region(loc);
+		return 1;
+	}
 	if (!result) return 0;
 	game.murphsdinner=ldt[dest].basetyp();
 	ldt[dest].set(TX_MURPH + TH_MOVEIN + i, timing.murphmove);
@@ -57,7 +75,7 @@ int tryeating(int loc, int i, int dest)
 		sfx_start(SE_infotron);
 		if (game.infotronsneeded) game.infotronsneeded--;
 		game.murphsdinner=TB_INFOTRON;
-		if (game.mode==1) game.loadlevel=(loc/lvlwidth)/2;
+		if (game.mode==1) game.lastlevel=game.loadlevel=(loc/lvlwidth)/2;
 	}
 	if (game.murphsdinner==TB_PCB)
 	{
@@ -170,6 +188,12 @@ void doobj_murphy(int loc)
 		if (ldt[loc].counter==0) game.loadlevel=-1;
 		return;
 	}
+	if (game.keydown[5])
+	{
+		if (game.mode==1) gameover=1;
+		game.ended=1;
+		explode_region(loc);
+	}
 	if (ldt[loc].counter>0) return;
 	dest[0]=above(loc);
 	dest[1]=rightof(loc);
@@ -183,6 +207,7 @@ void doobj_murphy(int loc)
 		{
 			sfx_start(SE_victory);
 			game.ended=1;
+			game.victory=1;
 			ldt[loc].set(TX_VANISHING | TB_MURPHY,timing.murphvanishing);
 			return;
 		}

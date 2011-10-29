@@ -110,6 +110,7 @@ struct ttile
 	inline int movfull() { return typ & 0x0f; }
 	inline int movdirection() { return typ & 0x03; }
 	inline int isfree() { return typ==0; }
+	inline int isfreeormurph() { return typ==0 || xtyp()==TX_MURPH; }
 	inline int isic() { return (typ & TF_IC)!=0; }
 	inline int ispcb() { return basetyp()==TB_PCB; }
 	inline int isenemy() { return xtyp()==TX_KNIK || xtyp()==TX_ELECTRON; }
@@ -117,7 +118,7 @@ struct ttile
 	inline int isportdown()  { int tb=basetyp(); return tb==TB_PORTDOWN  || tb==TB_PORTUPDN || tb==TB_PORTALL; }
 	inline int isportleft()  { int tb=basetyp(); return tb==TB_PORTLEFT  || tb==TB_PORTLR   || tb==TB_PORTALL; }
 	inline int isportright() { int tb=basetyp(); return tb==TB_PORTRIGHT || tb==TB_PORTLR   || tb==TB_PORTALL; }
-
+	int isdeadly(); // defined in objMurph
 /*
 #define ISFREEFORZONK(coord) (ISFREE(coord) || ((base==0x10) && (ldt[coord].base==0x0200)))
 #define ISLATRSVD(coord) (ldt[coord].b.extd==0xfd)
@@ -166,11 +167,12 @@ enum enum_gamemode{
  */
 struct tgamestate
 {
-	int keydown[5];       /// keys currently being pressed: UP,RIGHT,DOWN,LEFT,SPACE
+	int keydown[8];       /// keys currently being pressed: UP,RIGHT,DOWN,LEFT,SPACE
 	int mode; //=0;
-	int lost;             /// 1 if game is lost
+	int victory;          /// 1 if victory
 	int ended;            /// whether the game ended, either win or lose
 	int loadlevel;        /// whether a new level has to be loaded
+	int lastlevel;        /// the last level that was loaded
 
 	int gravity;          /// whether gravity is on
 	int freezezonks;
@@ -227,8 +229,9 @@ void tgamestate::init()
 {
 	mode=GAMEMODE_NORMAL;
 	murphloc=0;
-	lost=0;
+	victory=0;
 	ended=0;
+	infotronsneeded=0;
 	loadlevel=0;
 	murphlastleft=0;
 	murphsdinner=0;

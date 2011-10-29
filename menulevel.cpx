@@ -28,6 +28,9 @@ void genmenulevel()
 		ldt[lvlwidth*(i*2+3)+4].set(TB_LEVTITLE);
 	}
 	game.murphloc=lvlwidth+1;
+	if (game.lastlevel>0 && game.lastlevel<=n)
+		game.murphloc=lvlwidth+1+game.lastlevel*2*lvlwidth;
+
 	ldt[game.murphloc].set(TX_MURPH);
 	game.mode=1;
 	game.loadlevel=0;

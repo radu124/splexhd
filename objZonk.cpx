@@ -82,7 +82,7 @@ int zonkhit(int loc, int base)
 	if (ldt[BELOW].xtyp()==TX_MURPH)
 	{
 		explode_region(BELOW);
-		game.lost=game.ended=1;
+		game.ended=1;
 		return 1;
 	}
 	return 0;
