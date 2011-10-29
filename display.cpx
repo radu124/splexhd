@@ -45,8 +45,8 @@ void painttex(GLfloat i, GLfloat j, int id, int group=0, int rot=0, int flags=0)
 
 implementation
 
-uses objMurph, objKnik, objZonk, objOrange, objYellow, objVanishing, status;
-uses levelset;
+uses objMurph, objKnik, objZonk, objOrange, objYellow, objVanishing;
+uses levelset, player, status;
 
 void computeloc(int loc, GLfloat &locy, GLfloat &locx, int flags)
 {
@@ -139,8 +139,14 @@ void renderscene()
 		if (typ==TB_LEVTITLE)
 		{
 			if (y<-ts || y>scr_height) continue;
+			int lnum=i/lvlwidth/2-1;
+			int st=levelstate(lnum);
+			if (st==0) glColor4f(1,0,0,1);
+			else if (st==1) glColor4f(1,1,0,1);
+			else glColor4f(0,1,0,1);
 			painttyp=0;
-			deffont.displayString(getlevelname(i/lvlwidth/2-1).c_str(),x,y+ts*0.9,ts);
+			deffont.displayString(getlevelname(lnum).c_str(),x,y+ts*0.9,ts);
+			glColor4f(1,1,1,1);
 		}
 		else if (painttyp) painttex(y,x,painttyp);
 	}

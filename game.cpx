@@ -52,6 +52,7 @@ int main( int argc, char* argv[] )
 
 	//glBlendFunc (GL_BLEND_DST_ALPHA ,GL_SRC_ALPHA);
 	deffont.open(datadir+"/default.ttf");
+	loadplayerstate();
 	init_sprites();
 	init_audio();
 	init_effects();

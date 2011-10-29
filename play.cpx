@@ -156,7 +156,13 @@ void playGame()
 	*/
 	if (game.loadlevel)
 	{
-		if (game.loadlevel<0) genmenulevel();
+		if (game.loadlevel<0)
+		{
+			// this should only happen on a level exit
+			if (game.lastlevel>0 && game.mode==0)
+				finishlevel(game.lastlevel-1,game.victory,game.timenow-game.timestarted);
+			genmenulevel();
+		}
 		else if (!loadLevel(getleveldata(game.loadlevel-1))) genmenulevel();
 	}
 	if (game.timenow-game.timelastmove>30)

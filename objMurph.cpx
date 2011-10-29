@@ -43,7 +43,7 @@ int ttile::isdeadly()
 	int th=movfull();
 	return tx==TX_MOVEOUT
 		|| (tx==TB_INFOTRON && th!=0)
-		|| (tx==TX_ZONK && th!=0)
+//		|| (tx==TX_ZONK && th!=0)
 		|| tx==TX_KNIK
 		|| tx==TX_ELECTRON;
 
