@@ -57,6 +57,7 @@ int tryeating(int loc, int i, int dest)
 		sfx_start(SE_infotron);
 		if (game.infotronsneeded) game.infotronsneeded--;
 		game.murphsdinner=TB_INFOTRON;
+		if (game.mode==1) game.loadlevel=(loc/lvlwidth)/2;
 	}
 	if (game.murphsdinner==TB_PCB)
 	{
@@ -86,7 +87,7 @@ int tryport(int loc, int i, int dest)
 	if (i==2 && !ldt[dest].isportdown()) return 0;
 	if (i==3 && !ldt[dest].isportleft()) return 0;
 	if (!ldt[fardest].isfree()) return 0;
-	game.murphloc=dest;
+	game.murphloc=fardest;
 	ldt[loc].set(TX_MOVEOUT | i,timing.murphmove);
 	ldt[fardest].set(TX_MURPH | TH_MOVEDOUBLE | i,timing.murphmove);
 	if (i==1) game.murphlastleft=0;
@@ -164,7 +165,11 @@ void doobj_murphy(int loc)
 {
 	int dest[4];
 	int i;
-	if (game.ended) return;
+	if (game.ended)
+	{
+		if (ldt[loc].counter==0) game.loadlevel=-1;
+		return;
+	}
 	if (ldt[loc].counter>0) return;
 	dest[0]=above(loc);
 	dest[1]=rightof(loc);
@@ -224,23 +229,27 @@ void display_murphy(int loc)
 		switch(ldt[loc].movdirection())
 		{
 			case TH_UP:
-				painttex(y+ts,x,murphprogress,TT_murphwalk,game.murphlastleft);
-				computeloc(t=below(loc),y,x);
+				painttex(y+ts,x,murphprogress,TT_murphwalk,0,game.murphlastleft);
+				t=below(loc);
+				computeloc(t,y,x);
 				painttex(y,x,ldt[t].basetyp());
 				break;
 			case TH_DOWN:
-				painttex(y-ts,x,murphprogress,TT_murphwalk,game.murphlastleft);
-				computeloc(above(loc),y,x);
+				painttex(y-ts,x,murphprogress,TT_murphwalk,0,game.murphlastleft);
+				t=above(loc);
+				computeloc(t,y,x);
 				painttex(y,x,ldt[t].basetyp());
 				break;
 			case TH_LEFT:
-				painttex(y,x+ts,murphprogress,TT_murphwalk,game.murphlastleft);
-				computeloc(rightof(loc),y,x);
+				painttex(y,x+ts,murphprogress,TT_murphwalk,0,game.murphlastleft);
+				t=rightof(loc);
+				computeloc(t,y,x);
 				painttex(y,x,ldt[t].basetyp());
 				break;
 			case TH_RIGHT:
-				painttex(y,x-ts,murphprogress,TT_murphwalk,game.murphlastleft);
-				computeloc(leftof(loc),y,x);
+				painttex(y,x-ts,murphprogress,TT_murphwalk,0,game.murphlastleft);
+				t=leftof(loc);
+				computeloc(t,y,x);
 				painttex(y,x,ldt[t].basetyp());
 				break;
 		}

@@ -69,6 +69,7 @@ enum TTFLAGS {
 	TB_PORTALL     =    0x17,
 	TB_ELECTRON    =    0x18,
 	TB_BUG         =    0x19,
+	TB_LEVTITLE    =    0x3f,
 	TB_MYTILE      =    0x29, // 41
 	// TX = extended IDs we assign here to tiles that move
 	TX_VANISHING   =    0x70,
@@ -101,6 +102,7 @@ struct ttile
 	int typ;     // aka extd
 	int counter; // aka basic, cdown
 	int xplode;
+	int oldtyp;
 	void set(int vtyp=0, int vcounter=0, int vexplode=0);
 	inline int basetyp() { return typ&0xff; } // base type
 	inline int xtyp() { return typ&0xf0; } // base type
@@ -168,6 +170,7 @@ struct tgamestate
 	int mode; //=0;
 	int lost;             /// 1 if game is lost
 	int ended;            /// whether the game ended, either win or lose
+	int loadlevel;        /// whether a new level has to be loaded
 
 	int gravity;          /// whether gravity is on
 	int freezezonks;
@@ -196,20 +199,15 @@ struct tgamestate
 	void init();
 } game;
 
-/**
- * displacements used to access the tiles around a given tile
- */
-int delta[8]={-60,1,60,-1,-60,1,60,-1};
-
 string levelname;
 
 int lvlwidth=60;  /// width of a level
 int lvlheight=24; /// height of a level
 
-inline int above(int i) { int res=i+delta[0]; return res<0?i:res; }
-inline int below(int i) { int res=i+delta[2]; return res>=(lvlwidth*lvlheight)?i:res; }
-inline int leftof(int i) { int res=i+delta[3]; return res<0?i:res; }
-inline int rightof(int i) { int res=i+delta[1]; return res>=(lvlwidth*lvlheight)?i:res; }
+inline int above(int i) { int res=i-lvlwidth; return res<0?i:res; }
+inline int below(int i) { int res=i+lvlwidth; return res>=(lvlwidth*lvlheight)?i:res; }
+inline int leftof(int i) { int res=i-1; return res<0?i:res; }
+inline int rightof(int i) { int res=i+1; return res>=(lvlwidth*lvlheight)?i:res; }
 
 
 implementation
@@ -231,6 +229,7 @@ void tgamestate::init()
 	murphloc=0;
 	lost=0;
 	ended=0;
+	loadlevel=0;
 	murphlastleft=0;
 	murphsdinner=0;
 	reddiskcount=0;

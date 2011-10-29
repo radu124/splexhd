@@ -1,0 +1,34 @@
+interface
+
+/**
+ * generates an artificial level which allows choosing levels from
+ * the current levelset
+ */
+void genmenulevel();
+
+implementation
+
+uses gamedata, loadlevel;
+
+void genmenulevel()
+{
+	int i,j;
+	int n=getnumlevels();
+	game.init();
+	lvlwidth=20;
+	lvlheight=3+2*n;
+	dorealloc(ldt,lvlheight*lvlwidth+4);
+	for (i=0; i<lvlwidth*lvlheight; i++) ldt[i].set(0);
+	repairBorder();
+	for (i=0; i<n; i++)
+	{
+		ldt[lvlwidth*(i*2+2)+1].set(TF_PORT | TB_PORTUPDN);
+		for (j=2; j<lvlwidth; j++) ldt[lvlwidth*(i*2+2)+j].set(TF_SOLID | TB_CONCRETE);
+		ldt[lvlwidth*(i*2+3)+3].set(TX_INFOTRON);
+		ldt[lvlwidth*(i*2+3)+4].set(TB_LEVTITLE);
+	}
+	game.murphloc=lvlwidth+1;
+	ldt[game.murphloc].set(TX_MURPH);
+	game.mode=1;
+	game.loadlevel=0;
+}

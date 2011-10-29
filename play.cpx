@@ -50,7 +50,8 @@ int animprogress(int counter, int maxcounter, int animstart, int animstop=0);
 
 implementation
 
-uses gamedata, timing, loadlevel, objBug, objConsole, objExplosion, objKnik, objOrange, objZonk, objMurph, objVanishing;
+uses gamedata, timing, loadlevel, levelset, menulevel;
+uses objBug, objConsole, objExplosion, objKnik, objOrange, objZonk, objMurph, objVanishing;
 
 uint32_t gettimeuseconds();
 int appIdle();
@@ -90,7 +91,9 @@ int getdemomove()
 
 void startgame()
 {
-	if (!loadLevel("data/levels/orig-001.sp")) return;
+	load_levelset("data/levels/levels.dat");
+	//if (!loadLevel(getleveldata(0))) return;
+	genmenulevel();
 }
 
 void endgame()
@@ -151,6 +154,11 @@ void playGame()
 	doMurphy();
 	zoomOnMurphy();
 	*/
+	if (game.loadlevel)
+	{
+		if (game.loadlevel<0) genmenulevel();
+		else if (!loadLevel(getleveldata(game.loadlevel-1))) genmenulevel();
+	}
 	if (game.timenow-game.timelastmove>30)
 	{
 		doObjects();

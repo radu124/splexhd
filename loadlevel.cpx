@@ -18,10 +18,16 @@ uses includes;
 /**
  * load and initialize a game level into ldt
  * also initialize game and demo structures
- * @param s file or resource name
+ * @param leveldata pointer to level data
  * @return 1 on success, 0 otherwise
  */
-int loadLevel(string s);
+int loadLevel(const uint8_t* leveldata);
+
+
+/**
+ * set the borders around the level to solid blocks
+ */
+void repairBorder();
 
 implementation
 
@@ -32,14 +38,11 @@ uses objKnik;
  */
 void repairBorder();
 
-int loadLevel(string s)
+int loadLevel(const uint8_t* levdat)
 {
 	int i;
 	int levdsize;
 	int levfile;
-	const char *levdat;
-	levfile=mapFile(s,levdat,levdsize);
-	if (!levfile) return 0;
 	// find murphy
 	game.init();
 	lvlwidth=60;
@@ -121,7 +124,6 @@ int loadLevel(string s)
 			initobj_knik(i);
 
 	demo.init();
-	unmapFile(levfile);
 	return 1;
 }
 

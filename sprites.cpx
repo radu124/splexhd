@@ -17,6 +17,9 @@ void init_sprites();
 int gettex(int i, int j);
 int spritecount(int i);
 
+void texReleaseAll(){;}
+void texReloadAll(){;}
+
 implementation
 
 uses includes,configuration,readpng;

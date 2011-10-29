@@ -68,7 +68,7 @@ vector<string> listDirContents(string dir, int flags)
 	do
 	{
 		int attr=ffd.dwFileAttributes;
-		MESSAGE("lib: %s %d\n" &ffd.cFileName &(int) ffd.dwFileAttributes);
+		MESSAGE("lib: %s %d\n" ,ffd.cFileName ,(int) ffd.dwFileAttributes);
 		if ((flags & 2) && !(flags & 1) && (attr & FILE_ATTRIBUTE_DIRECTORY)!=0) continue;
 		if ((flags & 2) &&  (flags & 1) && (attr & FILE_ATTRIBUTE_DIRECTORY)==0) continue;		
 		// hide hidden files by default
