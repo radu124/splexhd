@@ -1,0 +1,18 @@
+gamedata:
+    Either classes (including virtual functions) or plain structs could be used for storing the game state (the ldt table).
+    I chose the later for the following reasons:
+      - classes could potentially make the source a bit shorter because the doobj_ and display functions could be virtualized instead of
+    having a big "switch" statement, and it could have been slightly faster. On the other hand the savings are minimal
+      - the type of a tile at a certain position in the table changes during the program execution - this would mean forcing a constructor
+    call for that tile (possibly with "placement new"), but this is in no way a nice solution, furthermore it seems dangerous
+
+Tile information and object behavior:
+
+Knick-knack or electrons (enemies):
+ - enemies need special initialization based on their surroundings, if certain tiles around them are free they may start one square ahead.
+ - when moving, the base tile of the enemy is the one ahead, the tail is just a marker.
+ - initialization
+	* default=turn left anticlockwise
+	* if left free skip one turn, done
+	* if above free go above rightaway, done
+	* if right free go right rightaway
