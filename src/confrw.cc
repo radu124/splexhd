@@ -16,10 +16,30 @@ GNU General Public License for more details.
 #include "message.h"
 #include "verbosity.h"
 
-void confread_GLfloat(char *&s, GLfloat &v) { v=atof(s); DBG(CONFIG," value GLfloat %f (from:%s)\n" ,v ,s);}
-void confread_int(char *&s, int &v)         { v=atoi(s); DBG(CONFIG," value int %d (from:%s)\n" ,v ,s);}
-void confread_string(char *&s, string &v)   { v=string(s); DBG(CONFIG," value string '%s'\n" ,v);}
+void CONFREAD_GLfloat(char *&s, GLfloat &v)
+{
+	v=atof(s);
+	DBG(CONFIG," value GLfloat %f (from:%s)\n" ,v ,s);
+}
 
+void CONFREAD_int(char *&s, int &v)
+{
+	v=atoi(s);
+	DBG(CONFIG," value int %d (from:%s)\n" ,v ,s);
+}
+
+void CONFREAD_string(char *&s, string &v)
+{
+	v=string(s);
+	DBG(CONFIG," value string '%s'\n" ,v);
+}
+
+/**
+ * return the value of the given hexadecimal digit or 0
+ * if the character is not a hexadecimal digit
+ * @param c input hexadecimal digit
+ * @return the value of the digit
+ */
 int hexdigit(char c)
 {
 	if (c>='0' && c<='9') return c-'0';
@@ -28,12 +48,17 @@ int hexdigit(char c)
 	return 0;
 }
 
+/**
+ * return the value of a two-digit hexadecimal number
+ * @param c the input number (char *) string
+ * @return the value of the hexadecimal number
+ */
 int hexbyte(const char *c)
 {
 	return 16*hexdigit(c[0])+hexdigit(c[1]);
 }
 
-void confread_mcolor(char *&s, mcolor &v)
+void CONFREAD_mcolor(char *&s, mcolor &v)
 {
 	const char *p=s;
 	if (p[0]=='#') p++;
