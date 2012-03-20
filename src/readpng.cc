@@ -26,7 +26,7 @@ void scaleDownWidth(GLubyte *pixels,int components,int &rwidth,int &rheight)
 	int ns,stride;
 	ns=rwidth/2;
 	stride=ns*components;
-	DBG(SPRITES,"Had to shrink down texture as it was too large\n");
+	DBG(PNGREAD,"Had to shrink down texture as it was too large\n");
 	for (i=0; i<rheight; i++) for (j=0; j<ns; j++) for (k=0; k<components; k++)
 	{
 		pixels[i*stride+j*components+k]=
@@ -43,7 +43,7 @@ void scaleDownHeight(GLubyte *pixels,int components,int &rwidth,int &rheight)
 	int i,j,k;
 	int ns,stride;
 	stride=rwidth*components;
-	DBG(SPRITES,"Had to shrink down texture as it was too large\n");
+	DBG(PNGREAD,"Had to shrink down texture as it was too large\n");
 	for (i=0; i<rheight/2; i++) for (j=0; j<rwidth; j++) for (k=0; k<components; k++)
 	{
 		pixels[i*stride+j*components+k]=
@@ -162,7 +162,7 @@ void loadImageSet(const char *filename, vector<GLuint> &textures, int flags)
 
 	if (rwidth!=width || rheight!=height)
 	{
-		WARN(SPRITES,"Sprite: %s has non-power of 2 size\n", filename);
+		WARN(PNGREAD,"Texture: %s has non-power of 2 size\n", filename);
 	}
 
 	GLubyte *pixels = (GLubyte *)malloc(sizeof(GLubyte) * (rwidth * rheight * components));

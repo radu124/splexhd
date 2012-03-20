@@ -24,7 +24,7 @@
 void CONFREAD_##a(char *&s, a &v) \
 { \
 	 v=(a)multiplechoice(s,b); \
-	 DBG(CONFIG," value " #a " %d (from:%s)\n" &(int)v &s); \
+	 DBG(CONFIG," value " #a " %d (from:%s)\n" ,(int)v ,s); \
 }
 
 /**

@@ -127,6 +127,13 @@ CONFIGLIST
 #undef CONFIGARRAY
 #undef CONFIGITEM
 
+
+/**
+ * vector that will store the unknown configuration variables
+ * so that they are not lost when rewriting the configuration file
+ */
+extern vector<string> config_unknown;
+
 /**
  * initialize paths (in particular homeconfdir, datadir, configFile
  * and scoresFile) and read configuration file
@@ -144,12 +151,6 @@ int config_read();
  * write the configuration variables to the configuration file
  */
 void config_write();
-
-/**
- * vector that will store the unknown configuration variables
- * so that they are not lost when rewriting the configuration file
- */
-extern vector<string> config_unknown;
 
 /**
  * Match a string read from the configuration file against the name of

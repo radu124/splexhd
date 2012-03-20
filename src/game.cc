@@ -57,7 +57,7 @@ int main( int argc, char* argv[] )
 		(video_dofullscreen?SDL_FULLSCREEN:0) );
 	fullscreenmode = video_dofullscreen;
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
-	INFO(SPRITES,"Maximum texture size:%d\n", maxTexSize);
+	INFO(GL,"Maximum texture size:%d\n", maxTexSize);
 	init_joysticks();
 	glEnable( GL_TEXTURE_2D );
 	glEnable (GL_BLEND);
