@@ -27,19 +27,19 @@ runopt: fretscpp
 	./splexhd
 	
 clean: 
-	-rm -rf game game-r splexhd .build
+	-rm -rf game game-r splexhd oneshot oneshot-opt .build
 
 release: splexhd
 
 .build/debug/%.o: src/%.cc
 	@mkdir -p $(@D)
 	@mkdir -p .build/deps
-	g++ -MF $(addprefix .build/deps/,$(subst .o,.d,$(subst /,_,$(subst .build/debug/,,$@)))) -MMD -c $< -Isrc -o $@ $(CFLAGS)
+	g++ -MF $(addprefix .build/deps/debug-,$(subst .o,.d,$(subst /,_,$(subst .build/debug/,,$@)))) -MMD -c $< -Isrc -o $@ $(CFLAGS)
 
 .build/release/%.o: src/%.cc
 	@mkdir -p $(@D)
 	@mkdir -p .build/deps
-	g++ -MF $(addprefix .build/deps/,$(subst .o,.d,$(subst /,_,$(subst .build/release/,,$@)))) -O3 -DDISABLEMESSAGES -MMD -c $< -Isrc -o $@ $(CFLAGS)
+	g++ -MF $(addprefix .build/deps/release-,$(subst .o,.d,$(subst /,_,$(subst .build/release/,,$@)))) -O3 -DDISABLEMESSAGES -MMD -c $< -Isrc -o $@ $(CFLAGS)
 
 .build/debug64/%.o: src/%.cc
 	@mkdir -p $(@D) 
@@ -52,6 +52,15 @@ game: $(OBJECTS)
 
 game64: $(OBJECTS_64)
 	g++ -m64 -MMD -MF $@.d $< -O0 -g3 -ggdb -o $@ $(LIBS)
+
+oneshot: $(SOURCES) $(HEADERS)
+	for i in $(SOURCES); do echo "#include \"$$i\""; done | g++ -g3 -ggdb -O0 -x c++ -o oneshot $(CFLAGS) - $(LIBS)
+
+oneshot-opt: $(SOURCES) $(HEADERS)
+	for i in $(SOURCES); do echo "#include \"$$i\""; done | g++ -O3 -DDISABLEMESSAGES -x c++ -o oneshot $(CFLAGS) - $(LIBS)
+
+run-oneshot: oneshot
+	./oneshot
 
 splexhd: $(OBJECTS_RELEASE)
 	g++ -O3 -DDISABLEMESSAGES -o $@ $^ $(LIBS)
